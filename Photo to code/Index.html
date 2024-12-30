@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enkripsi dan Dekripsi Gambar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="file"], input[type="text"], button {
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .output {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        #imageOutput {
+            max-width: 100%;
+            margin-top: 20px;
+        }
+
+        #downloadEncrypted {
+            display: none;
+        }
+
+        #copyButton {
+            display: none;
+        }
+
+        #errorMessage {
+            color: red;
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enkripsi dan Dekripsi Gambar</h1>
+
+        <!-- Form untuk Enkripsi -->
+        <h3>Enkripsi Gambar</h3>
+        <input type="file" id="fileInput" accept="image/*" />
+        <input type="text" id="keyInput" placeholder="Masukkan Kunci Rahasia" />
+        <button id="encryptButton">Enkripsi Gambar</button>
+
+        <h3>Hasil Enkripsi</h3>
+        <textarea id="encryptedOutput" class="output" rows="4" readonly></textarea>
+        <button id="copyButton">Salin Hasil Enkripsi</button>
+        <button id="downloadEncrypted">Unduh Gambar Terenkripsi</button>
+
+        <!-- Form untuk Dekripsi -->
+        <h3>Masukkan Hasil Enkripsi untuk Dekripsi</h3>
+        <textarea id="inputForDecryption" class="output" rows="4" placeholder="Masukkan hasil enkripsi di sini"></textarea>
+        <input type="text" id="decryptionKeyInput" placeholder="Masukkan Kunci Rahasia untuk Dekripsi" />
+        <button id="decryptButton">Dekripsi Gambar</button>
+
+        <h3>Hasil Dekripsi</h3>
+        <textarea id="decryptedOutput" class="output" rows="4" readonly></textarea>
+        <img id="imageOutput" src="" alt="Hasil Dekripsi" style="display: none;" />
+        <div id="errorMessage">Kunci rahasia salah atau dekripsi gagal. Gambar tidak dapat ditampilkan.</div>
+    </div>
+
+    <script>
+        // Fungsi enkripsi XOR untuk gambar dengan simbol tambahan
+        function xorEncryptDecrypt(text, key) {
+            let output = '';
+            for (let i = 0; i < text.length; i++) {
+                let char = text.charCodeAt(i) ^ key;
+                output += String.fromCharCode(char);
+            }
+            return output;
+        }
+
+        // Fungsi untuk mengonversi gambar ke base64
+        function convertToBase64(image) {
+            return new Promise((resolve, reject) => {
+                let reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(image);
+            });
+        }
+
+        // Fungsi untuk mengonversi base64 ke gambar
+        function base64ToImage(base64Str) {
+            let img = new Image();
+            img.src = base64Str;
+            return img;
+        }
+
+        // Menangani event enkripsi
+        document.getElementById('encryptButton').addEventListener('click', function() {
+            let keyInput = document.getElementById('keyInput').value;
+            let fileInput = document.getElementById('fileInput').files[0];
+
+            if (!keyInput || !fileInput) {
+                alert('Harap masukkan kunci rahasia dan gambar!');
+                return;
+            }
+
+            let key = parseInt(keyInput, 10);
+
+            // Convert gambar ke base64
+            convertToBase64(fileInput).then(base64Image => {
+                // Enkripsi gambar dengan XOR
+                let encryptedImage = xorEncryptDecrypt(base64Image, key);
+
+                // Menampilkan hasil enkripsi
+                document.getElementById('encryptedOutput').value = encryptedImage;
+                document.getElementById('downloadEncrypted').style.display = 'inline';
+                document.getElementById('copyButton').style.display = 'inline';
+
+                // Menyediakan tombol unduh untuk gambar terenkripsi
+                document.getElementById('downloadEncrypted').addEventListener('click', function() {
+                    let blob = new Blob([encryptedImage], { type: 'text/plain' });
+                    let url = URL.createObjectURL(blob);
+                    let a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'encrypted_image.txt';
+                    a.click();
+                });
+
+                // Tombol salin untuk hasil enkripsi
+                document.getElementById('copyButton').addEventListener('click', function() {
+                    let encryptedText = document.getElementById('encryptedOutput');
+                    encryptedText.select();
+                    document.execCommand('copy');
+                    alert('Hasil enkripsi telah disalin!');
+                });
+            }).catch(err => alert('Error dalam membaca gambar.'));
+        });
+
+        // Menangani event dekripsi
+        document.getElementById('decryptButton').addEventListener('click', function() {
+            let keyInput = document.getElementById('decryptionKeyInput').value;
+            let encryptedText = document.getElementById('inputForDecryption').value;
+
+            if (!keyInput || !encryptedText) {
+                alert('Harap masukkan kunci rahasia dan hasil enkripsi untuk dekripsi!');
+                return;
+            }
+
+            let key = parseInt(keyInput, 10);
+
+            // Dekripsi gambar dengan XOR
+            let decryptedImage = xorEncryptDecrypt(encryptedText, key);
+
+            // Validasi apakah hasil dekripsi adalah base64 yang valid untuk gambar
+            let img = new Image();
+            img.src = decryptedImage;
+
+            img.onload = function() {
+                // Jika berhasil memuat gambar, tampilkan gambar
+                document.getElementById('decryptedOutput').value = decryptedImage;
+                document.getElementById('imageOutput').src = decryptedImage;
+                document.getElementById('imageOutput').style.display = 'inline';
+                document.getElementById('errorMessage').style.display = 'none';
+            };
+
+            img.onerror = function() {
+                // Jika gagal memuat gambar, tampilkan pesan kesalahan
+                document.getElementById('errorMessage').style.display = 'inline';
+                document.getElementById('imageOutput').style.display = 'none';
+            };
+        });
+    </script>
+       <div>
+        <style>
+            #back-to-menu {
+          margin-top: 20px;
+          padding: 10px 20px;
+          background-color: #4CAF50;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          text-decoration: none;
+          font-size: 16px;
+          transition: background-color 0.3s;
+        }
+        #back-to-menu:hover {
+          background-color: #45a049;
+        }
+        
+        </style>
+                <a href="../index.html" id="back-to-menu">Back to Menu</a>
+            </div>
+            
+</body>
+</html>

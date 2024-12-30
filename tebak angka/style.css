@@ -1,0 +1,50 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center; /* Mengatur posisi horizontal ke tengah */
+  align-items: center; /* Mengatur posisi vertikal ke tengah */
+
+  margin: 0;
+  padding: 0;
+background-color: aquamarine;
+  background-size: cover; /* Menyesuaikan gambar agar selalu memenuhi seluruh area latar belakang */
+  background-position: center; /* Menengahkan gambar di tengah-tengah */
+  background-repeat: no-repeat; /* Menghindari pengulangan gambar */
+
+
+}
+
+.game {
+  text-align: center; /* Mengatur konten ke tengah */
+  border: 1px solid #000000;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #a5a2a2;
+}
+
+/* Opsi tambahan: membuat tombol berada di bawah input */
+.game button {
+  margin-top: 10px;
+}
+
+#back-to-menu {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+#back-to-menu:hover {
+  background-color: #45a049;
+}
+
+
+  
+  

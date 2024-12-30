@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+
+    margin: 0;
+    padding: 0;
+    background-color: rgb(111, 111, 226);
+    background-size: cover; /* Menyesuaikan gambar agar selalu memenuhi seluruh area latar belakang */
+    background-position: center; /* Menengahkan gambar di tengah-tengah */
+    background-repeat: no-repeat; /* Menghindari pengulangan gambar */
+
+
+}
+
+#back-to-menu {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+#back-to-menu:hover {
+    background-color: #45a049;
+}
+
+.container {
+    border: 5px solid rgb(255, 255, 255);
+    display: inline-block;
+    width: 300px; /* Lebar cukup untuk menampung grid 3x3 */
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+}
+
+.cell {
+    border: 2px solid rgb(255, 255, 255);
+    width: 100px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    cursor: pointer;
+}

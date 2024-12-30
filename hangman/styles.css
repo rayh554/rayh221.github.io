@@ -1,0 +1,54 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: rgb(216, 252, 255);
+}
+
+#back-to-menu {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+#back-to-menu:hover {
+    background-color: #45a049;
+}
+#hangman-container {
+    width: 400px;
+    margin: 50px auto;
+}
+
+#word-container {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+#wrong-letters-container {
+    margin-bottom: 20px;
+    font-size: 20px;
+    color: red;
+}
+
+#man {
+    display: flex;
+}
+
+#man > div {
+    width: 20px;
+    height: 20px;
+    background-color: rgb(211, 39, 39);
+    margin: 5px;
+}
+
+.keyboard-button {
+    display: inline-block;
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
